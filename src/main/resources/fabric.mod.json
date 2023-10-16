@@ -19,7 +19,6 @@
 			"com.abikebuk.Edim"
 		],
 		"client": [
-			"com.abikebuk.EdimClient"
 		]
 	},
 	"mixins": [
