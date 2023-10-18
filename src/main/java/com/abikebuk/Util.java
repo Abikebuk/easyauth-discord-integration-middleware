@@ -40,6 +40,7 @@ public class Util {
     }
 
     public static String getPlayerUUID(CommandContext<ServerCommandSource> context, String playerName){
+        Globals.LOGGER.info(getPlayer(context, playerName).getUuid().toString());
         return getPlayer(context, playerName).getUuid().toString();
     }
 }
