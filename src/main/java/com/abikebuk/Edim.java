@@ -91,38 +91,26 @@ public class Edim implements ModInitializer {
 
 	private CommandNode createCommand(){
 		// root - level 0 command
-		CommandNode root = new CommandNode(Globals.conf.rootCommandName);
+		CommandNode root = new CommandNode(Globals.conf.commandRoot);
 		root.setPermissionLevel(4);
 
 		// root/getConnectedPlayers - level 1 command
-		CommandNode getConnectedPlayers = new CommandNode("getConnectedPlayers", context ->{
+		CommandNode getConnectedPlayers = new CommandNode(Globals.conf.commandListPlayers, context ->{
 			context.getSource().sendFeedback(() -> Text.of(String.join(
-					";",
+					"; ",
 					context.getSource().getServer().getPlayerNames()
 			)), true);
 			return 0;
 		});
 
 		// root/registrationCommand - level 1 command
-		CommandNode registrationCommand = new CommandNode(Globals.conf.registrationCommandName);
+		CommandNode registrationCommand = new CommandNode(Globals.conf.commandRegister);
 		// root/registrationCommand/?player - level 2 command
 		CommandNode registrationCommandArgument = new CommandNode("?player", this::registerBotExecution);
 		registrationCommand.addSubCommand(registrationCommandArgument);
-
-		// root/getPlayer
-		CommandNode getPlayerCommand = new CommandNode("getPlayer");
-		CommandNode getPlayerCommandArgument = new CommandNode ("?player", context -> {
-			String player = StringArgumentType.getString(context, "player");
-			context.getSource().sendFeedback(() -> Text.of(
-					context.getSource().getServer().getPlayerManager().getPlayer(player).toString()
-			), false);
-			return 1;
-		});
-		getPlayerCommand.addSubCommand(getPlayerCommandArgument);
 		// Add level 1 commands
 		root.addSubCommand(getConnectedPlayers);
 		root.addSubCommand(registrationCommand);
-		root.addSubCommand(getPlayerCommand);
 		return root;
 	}
 

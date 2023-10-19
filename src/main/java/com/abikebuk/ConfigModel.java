@@ -14,9 +14,11 @@ public class ConfigModel {
     public String mongoEdimCollection = "edim";
 
     @JsonSetter(nulls = Nulls.SKIP)
-    public String rootCommandName = "edim";
+    public String commandRoot = "edim";
     @JsonSetter(nulls = Nulls.SKIP)
-    public String registrationCommandName = "register";
+    public String commandRegister = "register";
+    @JsonSetter(nulls = Nulls.SKIP)
+    public String commandListPlayers= "listPlayers";
 
     @JsonSetter(nulls = Nulls.SKIP)
     public int randomPasswordLength = 4;}

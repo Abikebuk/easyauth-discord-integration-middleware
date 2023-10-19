@@ -30,7 +30,8 @@ version ``1.0.0`` : Adds ``bot_register <userName>`` command allowing an user to
 version ``1.1.0`` : 
 * Adds generative command building (makes a less syntax heavy code to generate commands)
 * Moved command layout into a multi-layout command format. Instead of ``/bot_register <username>`` it is now ``/edim register <username>``. Every new commands will be added to the root command ``/edim``.
-* Add new configurable argument in ``edim.json``
+* Adds new configurable argument in ``edim.json``
+* Adds new command ``edim listPlayers`` which lists online players
 * Fixes ``Util.isPlayerRegistered`` which would return an exception when player is not registered (NullPointerException). Returns ``false`` now.
 * Fixes ``Util.getPlayerUUID`` which would return an exception when player is not connected (NullPointerException). Returns ``null`` now.
 * Fixes (?) registration command which would not work when run through a Discord Integration. Discord would show a wrong message (always the same one) even though the code runs fine server side with the expected result. I suspect ``useLocalCommands = true`` in ``config/Discord-Integration.toml`` which would activate some sort of caching. I have rewritten the registration method but I'm 100% sure it should have been working the way it was before. Worst case it changed nothing.
