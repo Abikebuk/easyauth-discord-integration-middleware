@@ -9,12 +9,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.util.List;
+
 public class Util {
     public static boolean isPlayerRegistered(String uuid){
         return Globals.mongo.runOnCollection((col) -> {
             FindIterable<Document> res = col.find(Filters.eq("UUID", uuid))
                     .projection(Projections.include("password"));
-            return res != null && !res.first().getString("password").isEmpty();
+            try{
+                return !res.first().getString("password").isEmpty();
+            }catch (NullPointerException e){ // catches res.first() == null which mean there is no user with player's UUID
+                return false;
+            }
         });
     }
 
@@ -40,7 +46,14 @@ public class Util {
     }
 
     public static String getPlayerUUID(CommandContext<ServerCommandSource> context, String playerName){
-        Globals.LOGGER.info(getPlayer(context, playerName).getUuid().toString());
-        return getPlayer(context, playerName).getUuid().toString();
+        try {
+            return getPlayer(context, playerName).getUuid().toString();
+        }catch(NullPointerException e){ // getPlayer(context, playerName) returns null when no connected player is found
+            return null;
+        }
+    }
+
+    public static boolean isPlayerConnected(CommandContext<ServerCommandSource> context, String player){
+        return List.of(context.getSource().getServer().getPlayerNames()).contains(player);
     }
 }
