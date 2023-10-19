@@ -4,16 +4,19 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Uuids;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Util {
     public static boolean isPlayerRegistered(String uuid){
-        return Globals.mongo.runOnCollection((col) -> {
+        return Globals.mongo.runOnEasyAuthCollection((col) -> {
             FindIterable<Document> res = col.find(Filters.eq("UUID", uuid))
                     .projection(Projections.include("password"));
             try{
@@ -25,10 +28,12 @@ public class Util {
     }
 
     public static void updatePlayerData(String playerUUID, Bson data){
-        Globals.mongo.runOnCollection((col) ->{
+        UpdateOptions options = new UpdateOptions().upsert(true);
+        Globals.mongo.runOnEdimCollection((col) ->{
             col.updateOne(
                     Filters.eq("UUID", playerUUID),
-                    data
+                    data,
+                    options
             );
         });
     }
@@ -55,5 +60,11 @@ public class Util {
 
     public static boolean isPlayerConnected(CommandContext<ServerCommandSource> context, String player){
         return List.of(context.getSource().getServer().getPlayerNames()).contains(player);
+    }
+
+    public static boolean isPlayerInOfflineMode(CommandContext<ServerCommandSource> context, String player){
+        String playerUUID = getPlayerUUID(context, player);
+        String offlinePlayerUUID = Uuids.getOfflinePlayerUuid(player).toString();
+        return Objects.equals(playerUUID, offlinePlayerUUID);
     }
 }

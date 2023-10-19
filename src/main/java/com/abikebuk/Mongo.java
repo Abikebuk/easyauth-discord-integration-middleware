@@ -11,17 +11,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Mongo {
-    private String database = "easyauth";
-    private String collection = "players";
-
+    private String database;
+    private String easyAuthCollection;
+    private String edimCollection;
     private ServerApi serverApi;
-
     private MongoClientSettings settings;
 
     public Mongo() {
+        database = Globals.conf.mongoDatabase;
+        easyAuthCollection = Globals.conf.mongoEasyAuthCollection;
+        edimCollection = Globals.conf.mongoEdimCollection;
         this.serverApi = this.getServerApi();
         this.settings = this.getSettings();
-
     }
     private ServerApi getServerApi() {
         return ServerApi.builder()
@@ -44,14 +45,18 @@ public class Mongo {
         return this.getClient().getDatabase(this.database);
     }
 
-    private MongoCollection<Document> getCollection(){
-        return this.getDatabase().getCollection(this.collection);
+    private MongoCollection<Document> getEasyAuthCollection(){
+        return this.getDatabase().getCollection(this.easyAuthCollection);
+    }
+
+    private MongoCollection<Document> getEdimCollection(){
+        return this.getDatabase().getCollection(this.edimCollection);
     }
 
     /* Interfaces */
-    public boolean runOnCollection(Function<MongoCollection<Document>, Boolean> func){
+    public boolean runOnEasyAuthCollection(Function<MongoCollection<Document>, Boolean> func){
         try{
-            return func.apply(this.getCollection());
+            return func.apply(this.getEasyAuthCollection());
         } catch (Exception e){
             Globals.logger.error(e.getMessage());
             e.printStackTrace();
@@ -59,16 +64,33 @@ public class Mongo {
         return false;
     }
 
-    public void runOnCollection(Consumer<MongoCollection<Document>> func){
+    public void runOnEasyAuthCollection(Consumer<MongoCollection<Document>> func){
         try{
-            func.accept(this.getCollection());
+            func.accept(this.getEasyAuthCollection());
         } catch (Exception e){
             Globals.logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public boolean runOnDatabase(Function<MongoDatabase, Boolean> func){
+    public boolean runOnEdimCollection(Function<MongoCollection<Document>, Boolean> func){
+        try{
+            return func.apply(this.getEasyAuthCollection());
+        } catch (Exception e){
+            Globals.logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void runOnEdimCollection(Consumer<MongoCollection<Document>> func){
+        try{
+            func.accept(this.getEdimCollection());
+        } catch (Exception e){
+            Globals.logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }    public boolean runOnDatabase(Function<MongoDatabase, Boolean> func){
         try{
             return func.apply(this.getDatabase());
         } catch (Exception e){

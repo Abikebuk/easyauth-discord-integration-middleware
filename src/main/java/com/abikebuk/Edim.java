@@ -2,6 +2,7 @@ package com.abikebuk;
 
 import com.abikebuk.commands.CommandBuilder;
 import com.abikebuk.commands.CommandNode;
+import com.abikebuk.config.ConfigurationFileHandler;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mongodb.client.model.Updates;
@@ -28,26 +29,18 @@ public class Edim implements ModInitializer {
 			Globals.logger.error(String.format("mongoConnectionUrl in %s is empty. This mod cannot work without it. Check the mod GitHub for more information.", ConfigurationFileHandler.filePath));
 		}
 	}
-	private void addDataOnRegistration(CommandContext<ServerCommandSource> context, String playerName, String playerUUID, String password, boolean isOffline){
+	private void addDataOnRegistration(CommandContext<ServerCommandSource> context, String playerName, String playerUUID, String password){
 		new Thread(() -> {
-			while(!Util.isPlayerRegistered(playerUUID)){
-				Globals.logger.info("Retrying to fetch data for player " + playerUUID);
-				try {
-					context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), "save-all");
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-			}
+			boolean isOffline = Util.isPlayerInOfflineMode(context, playerName);
 			Util.updatePlayerData(
 					playerUUID,
 					Updates.combine(
+							Updates.set("UUID", playerUUID),
 							Updates.set("offline", isOffline),
 							Updates.set("playerName", playerName),
 							Updates.set("firstPassword", password)
 					));
 		}).start();
-
 	}
 	private int registerBotExecution(CommandContext<ServerCommandSource> context){
 		String playerArg = StringArgumentType.getString(context,"player");
@@ -75,6 +68,7 @@ public class Edim implements ModInitializer {
 			);
 			// Force save in order to get Mongodb update from EasyAuth
 			context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), "save-all");
+			this.addDataOnRegistration(context, playerArg, playerUUID, randomPassword);
 		}
 		String finalResultMessage = resultMessage;
 		context.getSource().sendFeedback(() -> Text.of(finalResultMessage), false);
@@ -113,7 +107,5 @@ public class Edim implements ModInitializer {
 		root.addSubCommand(registrationCommand);
 		return root;
 	}
-
-
 }
 

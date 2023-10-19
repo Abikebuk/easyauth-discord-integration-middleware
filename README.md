@@ -29,9 +29,11 @@ Only ``mongoConnectionUrl`` is required and should be the same as the one in ``m
 version ``1.0.0`` : Adds ``bot_register <userName>`` command allowing an user to register. It gives a random numeric password with its length defined by ``randomPasswordLength``. The user can only register if he is connected on the minecraft Server.  
 version ``1.1.0`` : 
 * Adds generative command building (makes a less syntax heavy code to generate commands)
-* Moved command layout into a multi-layout command format. Instead of ``/bot_register <username>`` it is now ``/edim register <username>``. Every new commands will be added to the root command ``/edim``.
+* Moves command layout into a multi-layout command format. Instead of ``/bot_register <username>`` it is now ``/edim register <username>``. Every new commands will be added to the root command ``/edim``.
+* Divides EDIM data to a second MongoDB collection in use in parallel with EasyAuth collection. EasyAuth overwrites each entry completely (= doesn't keep updated / custom elements) making EasyAuth collection uneditable to EDIM. This second collection will allow EDIM to extend some of EasyAuth features.
 * Adds new configurable argument in ``edim.json``
 * Adds new command ``edim listPlayers`` which lists online players
+* Adds ``@JsonIgnoreProperties(ignoreUnknown=true)`` on ``ConfigModel.java`` permitting a more aggressive overwrite of the config file. Renamed fields are removed and replaced by the new ones. It doesn't keep field's value in that case. Renames to use with caution.
 * Fixes ``Util.isPlayerRegistered`` which would return an exception when player is not registered (NullPointerException). Returns ``false`` now.
 * Fixes ``Util.getPlayerUUID`` which would return an exception when player is not connected (NullPointerException). Returns ``null`` now.
 * Fixes (?) registration command which would not work when run through a Discord Integration. Discord would show a wrong message (always the same one) even though the code runs fine server side with the expected result. I suspect ``useLocalCommands = true`` in ``config/Discord-Integration.toml`` which would activate some sort of caching. I have rewritten the registration method but I'm 100% sure it should have been working the way it was before. Worst case it changed nothing.
