@@ -1,5 +1,6 @@
-package com.abikebuk;
+package com.abikebuk.config;
 
+import com.abikebuk.Globals;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
