@@ -22,10 +22,10 @@ public class ConfigurationFileHandler {
         ConfigModel conf = new ConfigModel();
         try {
             mapper.writeValue(confFile, conf);
-            Globals.LOGGER.info("Configuration file created. Don't forget to read the documentation to populate the missing configuration values.");
+            Globals.logger.info("Configuration file created. Don't forget to read the documentation to populate the missing configuration values.");
             return conf;
         } catch (IOException e) {
-            Globals.LOGGER.error("Could not create configuration file!");
+            Globals.logger.error("Could not create configuration file!");
             e.printStackTrace();
             return null;
         }
@@ -39,13 +39,13 @@ public class ConfigurationFileHandler {
             mapper.writeValue(confFile, res);
             return res;
         } catch (JsonMappingException e) {
-            Globals.LOGGER.error("Could not read configuration file! (JsonMappingException)");
+            Globals.logger.error("Could not read configuration file! (JsonMappingException)");
             e.printStackTrace();
         } catch (JsonParseException e) {
-            Globals.LOGGER.error("Could not read configuration file! (JsonParseException)");
+            Globals.logger.error("Could not read configuration file! (JsonParseException)");
             e.printStackTrace();
         } catch (IOException e) {
-            Globals.LOGGER.error("Could not read configuration file! (IOException)");
+            Globals.logger.error("Could not read configuration file! (IOException)");
             e.printStackTrace();
         }
         return null;

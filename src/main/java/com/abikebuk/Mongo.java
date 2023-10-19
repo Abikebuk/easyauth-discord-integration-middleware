@@ -53,7 +53,7 @@ public class Mongo {
         try{
             return func.apply(this.getCollection());
         } catch (Exception e){
-            Globals.LOGGER.error(e.getMessage());
+            Globals.logger.error(e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -63,7 +63,7 @@ public class Mongo {
         try{
             func.accept(this.getCollection());
         } catch (Exception e){
-            Globals.LOGGER.error(e.getMessage());
+            Globals.logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -72,7 +72,7 @@ public class Mongo {
         try{
             return func.apply(this.getDatabase());
         } catch (Exception e){
-            Globals.LOGGER.error(e.getMessage());
+            Globals.logger.error(e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -82,7 +82,7 @@ public class Mongo {
         try{
             func.accept(this.getDatabase());
         } catch (Exception e){
-            Globals.LOGGER.error(e.getMessage());
+            Globals.logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
