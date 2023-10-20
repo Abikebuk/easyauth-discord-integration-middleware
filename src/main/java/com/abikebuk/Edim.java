@@ -18,7 +18,6 @@ public class Edim implements ModInitializer {
 		// Static variables initialization
 		Globals.conf = ConfigurationFileHandler.loadConfig();
 		Globals.mongo = new Mongo();
-
 		registerCommand();
 		runPostInitializationChecks();
 	}
@@ -67,11 +66,11 @@ public class Edim implements ModInitializer {
 					randomPassword
 			);
 			// Force save in order to get Mongodb update from EasyAuth
-			context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), "save-all");
 			this.addDataOnRegistration(context, playerArg, playerUUID, randomPassword);
 		}
 		String finalResultMessage = resultMessage;
 		context.getSource().sendFeedback(() -> Text.of(finalResultMessage), false);
+		context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), "save-all");
 		return 0;
 	}
 	private void registerCommand(){
@@ -87,7 +86,6 @@ public class Edim implements ModInitializer {
 		// root - level 0 command
 		CommandNode root = new CommandNode(Globals.conf.commandRoot);
 		root.setPermissionLevel(4);
-
 		// root/getConnectedPlayers - level 1 command
 		CommandNode getConnectedPlayers = new CommandNode(Globals.conf.commandListPlayers, context ->{
 			context.getSource().sendFeedback(() -> Text.of(String.join(
@@ -96,7 +94,6 @@ public class Edim implements ModInitializer {
 			)), true);
 			return 0;
 		});
-
 		// root/registrationCommand - level 1 command
 		CommandNode registrationCommand = new CommandNode(Globals.conf.commandRegister);
 		// root/registrationCommand/?player - level 2 command
@@ -108,4 +105,3 @@ public class Edim implements ModInitializer {
 		return root;
 	}
 }
-
