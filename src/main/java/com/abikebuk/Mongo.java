@@ -5,6 +5,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerApi;
 import com.mongodb.ServerApiVersion;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Indexes;
 import org.bson.Document;
 
 import java.util.function.Consumer;
@@ -23,6 +24,11 @@ public class Mongo {
         edimCollection = Globals.conf.mongoEdimCollection;
         this.serverApi = this.getServerApi();
         this.settings = this.getSettings();
+
+        // There should be only one UUID per registration
+        // Somehow EasyAuth doesn't do that ~
+        this.getEasyAuthCollection().createIndex(Indexes.ascending("UUID"));
+        this.getEdimCollection().createIndex(Indexes.ascending("UUID"));
     }
     private ServerApi getServerApi() {
         return ServerApi.builder()
