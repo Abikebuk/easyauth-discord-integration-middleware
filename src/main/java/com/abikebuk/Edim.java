@@ -1,16 +1,16 @@
 package com.abikebuk;
 
 import com.abikebuk.commands.CommandBuilder;
-import com.abikebuk.commands.CommandNode;
 import com.abikebuk.config.ConfigurationFileHandler;
+import com.abikebuk.database.Mongo;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mongodb.client.model.Updates;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.text.Text;
-
 
 public class Edim implements ModInitializer {
 	@Override
@@ -29,6 +29,7 @@ public class Edim implements ModInitializer {
 		}
 	}
 	private void addDataOnRegistration(CommandContext<ServerCommandSource> context, String playerName, String playerUUID, String password){
+		// Data registration doesn't need to be synchronous
 		new Thread(() -> {
 			boolean isOffline = Util.isPlayerInOfflineMode(context, playerName);
 			Util.updatePlayerData(
@@ -74,34 +75,23 @@ public class Edim implements ModInitializer {
 		return 0;
 	}
 	private void registerCommand(){
-		CommandNode root = createCommand();
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(
-				new CommandBuilder(root).generate()
+					createCommand()
 			);
 		});
 	}
 
-	private CommandNode createCommand(){
-		// root - level 0 command
-		CommandNode root = new CommandNode(Globals.conf.commandRoot);
-		root.setPermissionLevel(4);
-		// root/getConnectedPlayers - level 1 command
-		CommandNode getConnectedPlayers = new CommandNode(Globals.conf.commandListPlayers, context ->{
+	private LiteralArgumentBuilder<ServerCommandSource> createCommand() {
+		CommandBuilder builder = new CommandBuilder();
+		builder.addCommand("edim register ?player", 4, this::registerBotExecution);
+		builder.addCommand("edim listPlayers", 4, context -> {
 			context.getSource().sendFeedback(() -> Text.of(String.join(
-					"; ",
+					", ",
 					context.getSource().getServer().getPlayerNames()
 			)), true);
 			return 0;
 		});
-		// root/registrationCommand - level 1 command
-		CommandNode registrationCommand = new CommandNode(Globals.conf.commandRegister);
-		// root/registrationCommand/?player - level 2 command
-		CommandNode registrationCommandArgument = new CommandNode("?player", this::registerBotExecution);
-		registrationCommand.addSubCommand(registrationCommandArgument);
-		// Add level 1 commands
-		root.addSubCommand(getConnectedPlayers);
-		root.addSubCommand(registrationCommand);
-		return root;
+		return builder.generate();
 	}
 }

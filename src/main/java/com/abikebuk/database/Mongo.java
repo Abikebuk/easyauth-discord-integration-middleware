@@ -1,5 +1,6 @@
-package com.abikebuk;
+package com.abikebuk.database;
 
+import com.abikebuk.Globals;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerApi;

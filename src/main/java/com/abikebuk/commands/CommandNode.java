@@ -69,7 +69,18 @@ public class CommandNode {
 
     public int getPermissionLevel() { return this.permissionLevel; }
 
+    public CommandNode getSubCommand(String name){
+        for(CommandNode node : this.subCommands){
+            if(node.name == name)
+                return node;
+        }
+        return null;
+    }
     public boolean isLiteral() { return !this.isArg; }
 
     public void setPermissionLevel(int permissionLevel) { this.permissionLevel = permissionLevel; }
+    public void setName(String name) { this.name = name; }
+    public void setFunction(Function<CommandContext<ServerCommandSource>, Integer> function){
+        this.function = function;
+    }
 }

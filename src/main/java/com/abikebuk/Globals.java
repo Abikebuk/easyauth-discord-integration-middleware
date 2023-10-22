@@ -1,6 +1,7 @@
 package com.abikebuk;
 
 import com.abikebuk.config.ConfigModel;
+import com.abikebuk.database.Mongo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
