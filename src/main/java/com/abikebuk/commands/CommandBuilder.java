@@ -13,13 +13,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * CommandBuilder class.
+ * Translation layer of the Fabric API's command creation methods.
+ * Aims to make command creation easier to understand by removing all the redundant syntax of the Fabric API's functions.
+ * Takes advantage of the resemblance of the way to make command with a tree (data structure).
+ */
 public class CommandBuilder {
+    /**
+     * Node to generate
+     */
     private CommandNode node;
 
+    /**
+     * Constructor
+     * @param node Command node to generate.
+     */
     public CommandBuilder(CommandNode node) {
         this.node = node;
     }
 
+    /**
+     * Constructor. Adds a root node with an empty name
+     */
     public CommandBuilder() {
         this.node = new CommandNode("");
     }
@@ -27,9 +43,8 @@ public class CommandBuilder {
     /**
      * Generate a command readable by the Fabric API from the CommandNode
      * Root node has to be Literal as required from the Fabric API.
-     * Presents duplication with generate(node). Only return type is different
-     *
-     * @return
+     * Presents duplication with generate(node). Only return type is different.
+     * @return a literal command usable by the Fabric API.
      */
     public LiteralArgumentBuilder<ServerCommandSource> generate() {
         if (node.isArgument()) throw new IllegalArgumentException("Root node must be literal");
@@ -46,9 +61,9 @@ public class CommandBuilder {
     /**
      * Generate a command readable by the Fabric API from the CommandNode
      * Used mainly in recursive call from generate() with no argument
-     *
-     * @param node
-     * @return
+     * Can be used to get a ArgumentCommand instead of a LiteralCommand if root node is an Argument
+     * @param node a command node
+     * @return a literal or argument command that can be used by the Fabric API.
      */
     public static ArgumentBuilder<ServerCommandSource, ?> generate(CommandNode node) {
         // Generate base command
@@ -68,6 +83,13 @@ public class CommandBuilder {
                 command.executes(context -> node.getFunction().apply(context));
     }
 
+    /**
+     * Add a command to generate.
+     * Root command has to be the same for every command added.
+     * @param command command or subcommand string
+     * @param permissionLevel the value of permission level (0 is everyone, 4 is op)
+     * @param function function associated with the command
+     */
     public void addCommand(String command, int permissionLevel, Function<CommandContext<ServerCommandSource>, Integer> function) {
         String trimmedCommand = command.trim();
         ArrayList<String> subCommands = new ArrayList<>(List.of(trimmedCommand.split("\\s+")));
@@ -83,17 +105,44 @@ public class CommandBuilder {
         addCommand(this.node, subCommands, permissionLevel, function);
     }
 
+    /**
+     * Add a command to generate.
+     * Root command has to be the same for every command added.
+     * @param command command or subcommand string
+     * @param function function associated with the command
+     */
     public void addCommand(String command, Function<CommandContext<ServerCommandSource>, Integer> function) {
         addCommand(command, 0, function);
     }
 
+    /**
+     * Add a command to generate.
+     * Root command has to be the same for every command added.
+     * @param command command or subcommand string
+     */
     public void addCommand(String command){
         addCommand(command, 0, null);
     }
 
+    /**
+     * Add a command to generate.
+     * Root command has to be the same for every command added.
+     * @param command command or subcommand string
+     * @param permissionLevel the value of permission level (0 is everyone, 4 is op)
+     */
     public void addCommand(String command, int permissionLevel){
         addCommand(command, permissionLevel, null);
     }
+
+    /**
+     * Add a command to generate.
+     * Root command has to be the same for every command added.
+     * This function is used mainly in a recursive context form other addCommand()
+     * @param node current node to edit
+     * @param commandStack stack of command string to navigate in
+     * @param permissionLevel the value of permission level (0 is everyone, 4 is op)
+     * @param function function associated with the last command of the command stack
+     */
     private void addCommand(CommandNode node, ArrayList<String> commandStack, int permissionLevel, Function<CommandContext<ServerCommandSource>, Integer> function) {
         Globals.logger.info(String.format("Adding command - %s\nStack left : %s", node.getName(), String.join(";", commandStack)));
         if (commandStack.isEmpty()) {
