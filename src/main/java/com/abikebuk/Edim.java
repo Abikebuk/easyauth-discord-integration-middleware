@@ -28,7 +28,7 @@ public class Edim implements ModInitializer {
 		builder.addCommand("edim register ?player", 4, Authentication::register);
 		builder.addCommand("edim unregister ?player", 4, Authentication::unregister);
 		builder.addCommand("edim getUuid ?player", 4, DBInterface::getPlayerUUID);
-		builder.addCommand("edim listPlayers", 4, PlayerUtil::getConnectedPlayerName);
+		builder.addCommand("edim listPlayers", 4, MinecraftInterface::getConnectedPlayerName);
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				dispatcher.register(builder.generate()));
 	}

@@ -9,7 +9,20 @@ import com.mongodb.client.model.Updates;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
+/**
+ * Authentication class
+ * Services centered around authentication with EasyAuth
+ */
 public class Authentication {
+    /**
+     * Register a player in EasyAuth database and populate edim's own database. Requires a "player" argument.
+     * Registration will send back a message to the entity calling this method and give him a random password.
+     * This command will register the player only if the player is connected in game and not already registered in the database.
+     * It will do nothing otherwise and give a corresponding message corresponding to the case.
+     * Requires a "player" argument.
+     * @param context element given by argument/literal executes method.
+     * @return a value to give to Fabric
+     */
     public static int register(CommandContext<ServerCommandSource> context){
         String playerArg = StringArgumentType.getString(context,"player");
         Globals.logger.info(String.format("Registration of user %s ...", playerArg));
@@ -43,6 +56,14 @@ public class Authentication {
         return 0;
     }
 
+    /**
+     * Adds a few data complementary to the one produced by EasyAuth in EDIM's database.
+     * Database are separated because of how EasyAuth manages its MongoDB database which overwrite everything on update.
+     * @param context element given by argument/literal executes method.
+     * @param playerName In game name of the player
+     * @param playerUUID UUID of the player
+     * @param password First password generated
+     */
     private static void addDataOnRegistration(CommandContext<ServerCommandSource> context, String playerName, String playerUUID, String password){
         // Data registration doesn't need to be synchronous
         new Thread(() -> {
@@ -58,6 +79,12 @@ public class Authentication {
         }).start();
     }
 
+    /**
+     * Removes a player from the database
+     * Requires a "player" argument
+     * @param context element given by argument/literal executes method.
+     * @return a value to give to Fabric
+     */
     public static int unregister(CommandContext<ServerCommandSource> context){
         String playerName = StringArgumentType.getString(context, "player");
         String uuid = DBInterface.getPlayerUUID(playerName);

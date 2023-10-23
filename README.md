@@ -40,7 +40,7 @@ Version ``1.1.0`` :
 * Fixes ``Util.isPlayerRegistered`` which would return an exception when player is not registered (NullPointerException). Returns ``false`` now.
 * Fixes ``Util.getPlayerUUID`` which would return an exception when player is not connected (NullPointerException). Returns ``null`` now.
 * Fixes (?) registration command which would not work when run through a Discord Integration. Discord would show a wrong message (always the same one) even though the code runs fine server side with the expected result. I suspect ``useLocalCommands = true`` in ``config/Discord-Integration.toml`` which would activate some sort of caching. I have rewritten the registration method but I'm 100% sure it should have been working the way it was before. Worst case it changed nothing.
-* Cleaner project structure
+* Cleaner project structure. Still needs lot of work on that. (Services need some rework~)
 Version ``1.0.0`` : 
 * Adds ``bot_register <userName>`` command allowing an user to register. It gives a random numeric password with its length defined by ``randomPasswordLength``. The user can only register if he is connected on the minecraft Server.  
 * Base version also includes its own config file handler and a basic MongoDB interface.
