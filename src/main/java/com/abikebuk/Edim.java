@@ -27,6 +27,7 @@ public class Edim implements ModInitializer {
 	private void registerCommand(){
 		CommandBuilder builder = new CommandBuilder();
 		builder.addCommand("edim register ?player", 4, Authentication::register);
+		builder.addCommand("edim unregister ?player", 4, Authentication::unregister);
 		builder.addCommand("edim listPlayers", 4, PlayerUtil::getConnectedPlayerName);
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				dispatcher.register(builder.generate()));
