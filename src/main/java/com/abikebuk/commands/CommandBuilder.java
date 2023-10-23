@@ -1,6 +1,5 @@
 package com.abikebuk.commands;
 
-import com.abikebuk.Globals;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
