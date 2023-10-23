@@ -23,7 +23,7 @@ public class CommandBuilder {
     /**
      * Node to generate
      */
-    private CommandNode node;
+    private final CommandNode node;
 
     /**
      * Constructor

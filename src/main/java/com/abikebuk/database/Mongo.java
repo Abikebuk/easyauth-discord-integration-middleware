@@ -13,11 +13,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Mongo {
-    private String database;
-    private String easyAuthCollection;
-    private String edimCollection;
-    private ServerApi serverApi;
-    private MongoClientSettings settings;
+    private final String database;
+    private final String easyAuthCollection;
+    private final String edimCollection;
+    private final ServerApi serverApi;
+    private final MongoClientSettings settings;
 
     public Mongo() {
         database = Globals.conf.mongoDatabase;

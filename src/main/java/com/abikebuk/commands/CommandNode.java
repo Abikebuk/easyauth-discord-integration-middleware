@@ -5,6 +5,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -19,7 +20,7 @@ public class CommandNode {
     /**
      * Subcommands attached to this node
      */
-    private ArrayList<CommandNode> subCommands;
+    private final ArrayList<CommandNode> subCommands;
     /**
      * function attached to this node
      */
@@ -31,7 +32,7 @@ public class CommandNode {
     /**
      * Defines if this node is an argument or literal
      */
-    private boolean isArg;
+    private final boolean isArg;
 
     /**
      * Constructor
@@ -75,7 +76,7 @@ public class CommandNode {
      * @param isArg defines if this node is an argument (if true) or a literal (if false)
      */
     public CommandNode(String name, boolean isArg){
-        this(name, isArg, null, null);
+        this(name, isArg, new ArrayList<>(), null);
     }
     
     /* Implicit declaration as argument declaration by adding "?" as first character on name */
@@ -185,7 +186,7 @@ public class CommandNode {
      */
     public CommandNode getSubCommand(String name){
         for(CommandNode node : this.subCommands){
-            if(node.name == name)
+            if(Objects.equals(node.name, name))
                 return node;
         }
         return null;

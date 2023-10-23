@@ -75,11 +75,9 @@ public class Edim implements ModInitializer {
 		return 0;
 	}
 	private void registerCommand(){
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(
-					createCommand()
-			);
-		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
+				createCommand()
+		));
 	}
 
 	private LiteralArgumentBuilder<ServerCommandSource> createCommand() {
