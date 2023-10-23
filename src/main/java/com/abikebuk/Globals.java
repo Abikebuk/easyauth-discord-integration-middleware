@@ -18,8 +18,21 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Globals class
+ * Contains variables available globally
+ */
 public class Globals {
+    /**
+     * Mongo instance
+     */
     public static Mongo mongo;
+    /**
+     * Logger instance
+     */
     public static final Logger logger = LoggerFactory.getLogger("edim");
+    /**
+     * Configs variables
+     */
     public static ConfigModel conf;
 }

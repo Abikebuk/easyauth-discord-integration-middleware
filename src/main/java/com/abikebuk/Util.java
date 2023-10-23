@@ -1,5 +1,9 @@
 package com.abikebuk;
 
+/**
+ * Util class
+ * Contains a set of utility methods
+ */
 public class Util {
 
     public static String getRandomNumericPassword(int size){
