@@ -100,7 +100,6 @@ public class CommandBuilder {
             this.node.setName(firstSubCommand);
         else if (!Objects.equals(this.node.getName(), firstSubCommand))
             throw new IllegalArgumentException("Root command must always be the same");
-        Globals.logger.info("Command Stack parsed : " + String.join(";", subCommands));
         subCommands.remove(0);
         addCommand(this.node, subCommands, permissionLevel, function);
     }
@@ -144,7 +143,6 @@ public class CommandBuilder {
      * @param function function associated with the last command of the command stack
      */
     private void addCommand(CommandNode node, ArrayList<String> commandStack, int permissionLevel, Function<CommandContext<ServerCommandSource>, Integer> function) {
-        Globals.logger.info(String.format("Adding command - %s\nStack left : %s", node.getName(), String.join(";", commandStack)));
         if (commandStack.isEmpty()) {
             node.setFunction(function);
             node.setPermissionLevel(permissionLevel);

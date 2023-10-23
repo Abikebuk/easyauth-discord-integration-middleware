@@ -4,6 +4,7 @@ import com.abikebuk.Globals;
 import com.abikebuk.Util;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -12,14 +13,14 @@ public class Authentication {
     public static int register(CommandContext<ServerCommandSource> context){
         String playerArg = StringArgumentType.getString(context,"player");
         Globals.logger.info(String.format("Registration of user %s ...", playerArg));
-        String playerUUID = Util.getPlayerUUID(context, playerArg);
+        String playerUUID = MinecraftInterface.getPlayerUUID(context, playerArg);
         Globals.logger.info(String.format("Player UUID found : %s", playerUUID == null ? "null" : playerUUID));
         String resultMessage;
         if(playerUUID == null){ // Same result as Util.isPlayerConnected
             Globals.logger.info("Player not connected : Cancelling registration");
             resultMessage = "You must be connected to be able to register! Or maybe you mistyped your name...";
         }
-        else if(Util.isPlayerRegistered(playerUUID)){
+        else if(DBInterface.isPlayerRegistered(playerUUID)){
             Globals.logger.info("Player already registered : Cancelling registration");
             resultMessage = "You are already registered!";
         }
@@ -45,8 +46,8 @@ public class Authentication {
     private static void addDataOnRegistration(CommandContext<ServerCommandSource> context, String playerName, String playerUUID, String password){
         // Data registration doesn't need to be synchronous
         new Thread(() -> {
-            boolean isOffline = Util.isPlayerInOfflineMode(context, playerName);
-            Util.updatePlayerData(
+            boolean isOffline = MinecraftInterface.isPlayerInOfflineMode(context, playerName);
+            DBInterface.updatePlayerData(
                     playerUUID,
                     Updates.combine(
                             Updates.set("UUID", playerUUID),
@@ -59,6 +60,15 @@ public class Authentication {
 
     public static int unregister(CommandContext<ServerCommandSource> context){
         String playerName = StringArgumentType.getString(context, "player");
+        String uuid = DBInterface.getPlayerUUID(playerName);
+        if(uuid != null){
+            context.getSource().sendFeedback(() -> Text.of(String.format("There is no player named %s", playerName)), false);
+            return 1;
+        }
+        context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource(), String.format("auth remove %s", uuid));
+        Globals.mongo.runOnEdimCollection(col ->{
+            col.deleteOne(Filters.eq("UUID", uuid));
+        });
         return 0;
     }
 }
