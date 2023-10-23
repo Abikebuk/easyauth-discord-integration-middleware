@@ -16,7 +16,7 @@ It presents lot of different classes and wrapped ``then()`` to make just one com
 long intricate classes names and almost no examples on most of what you need to build a command, makes a very bad coding experience.  
 
 ## How-To-Use
-This package features two different way to build a command with the first being the detail of the structure behind the second which the transformation of the first in a more user friendly code.
+This package features two different way to build a command with the second being the detail of the structure behind the first which is the transformation of the second method in a more user friendly code.
 
 ### First Method : 
 Easiest way to build a command
