@@ -30,7 +30,7 @@ Only ``mongoConnectionUrl`` is required and should usually be the same as the on
 
 ## Changelog 
 Version ``1.1.0`` :
-* Adds generative command building (makes a less syntax heavy code to generate commands)
+* Adds generative command building (makes a less syntax heavy code to generate commands). Command can be built one one line and is tenfold more understandable this way.
 * Moves command layout into a multi-layout command format. Instead of ``/bot_register <username>`` it is now ``/edim register <username>``. Every new commands will be added to the root command ``/edim``.
 * Divides EDIM data into a second MongoDB collection in use in parallel with EasyAuth collection. EasyAuth overwrites each entry completely (= doesn't keep updated / custom elements) making EasyAuth collection uneditable to EDIM. This second collection will allow EDIM to extend some of EasyAuth features.
 * Adds Indexes on UUID to both EasyAuth & EDIM collections
