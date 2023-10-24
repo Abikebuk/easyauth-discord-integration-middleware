@@ -28,7 +28,9 @@ A configuration file ``config/edim.json`` will be automatically generated on ser
   "mongoEdimCollection" : "edim",
   "commandRoot" : "edim",
   "commandRegister" : "register",
+  "commandUnregister" : "unregister",
   "commandListPlayers" : "listPlayers",
+  "commandGetUUID" : "getUuid",
   "randomPasswordLength" : 4
 }
 ```
