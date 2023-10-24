@@ -1,18 +1,21 @@
 # EasyAuth Discord Integration Middleware (EDIM)
-This mods allows the use of Discord commands through the Discord Integration mod to run EasyAuth command on Minecraft by extending some of the EasyAuth commands.  The goal of this mod is to add a layer of protection on servers by forcing players to register on a specific Discord Server thus filter player.
-
-**README is WIP**
+This mods allows the use of Discord commands through the Discord Integration mod to run EasyAuth command on Minecraft by extending some of the EasyAuth commands.  The goal of this mod is to add a layer of protection on servers by forcing players to register on a specific Discord Server thus filter and control player getting on the server.
 
 ## Disclaimer
 This mod requires some basic Discord bot and MongoDB knowledge.
 
+## Features
+This mod 
 ## Dependencies 
-The only dependency is EasyAuth
+The only true dependency is [EasyAuth](https://www.curseforge.com/minecraft/mc-mods/easyauth) that must use MongoDB (see [here](https://github.com/NikitaCartes/EasyAuth/wiki/Config)).  As such it can be considered as a EasyAuth extension.
+
+[Discord Integration](https://www.curseforge.com/minecraft/mc-mods/dcintegration-fabric) is not required but it is around what this mod is build on. However, anything that can run Minecraft command from a Discord bot command should work.  
+
+Optionally, [LuckyPerms](https://luckperms.net/) can be used to moderate which command can be used by players (ie. remove ``/register`` to force users to register through Discord instead)
 
 ## Config File
-A configuration file ``config/edim.json`` will be automatically generated on server startup and will result in a crash because it will not be able to connect to MongoDB.
-The default config is [EasyAuth](https://www.curseforge.com/minecraft/mc-mods/easyauth).  
-However this mod is also built around [Discord Integration Fabric](https://www.curseforge.com/minecraft/mc-mods/dcintegration-fabric) which is the recommended option but you could always make your own bot interface.
+A configuration file ``config/edim.json`` will be automatically generated on server startup and will result in a crash because it will not be able to connect to MongoDB.  
+[EasyAuth](https://www.curseforge.com/minecraft/mc-mods/easyauth) and [Discord Integration](https://www.curseforge.com/minecraft/mc-mods/dcintegration-fabric) must be configured accordingly to work with this mod.
 
 ```json
 {
@@ -26,7 +29,17 @@ However this mod is also built around [Discord Integration Fabric](https://www.c
   "randomPasswordLength" : 4
 }
 ```
-Only ``mongoConnectionUrl`` is required and should usually be the same as the one in ``mods/EasyAuth/config.json`` from the field ``MongoDBConnectionString``
+
+| Field                   | Default Value | Comment                                                                                                                                                                                                                                                       | 
+|-------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mongoConnectionUrl      |               | Only ``mongoConnectionUrl`` is required to be filled manually and should usually be the same as the one in ``mods/EasyAuth/config.json`` from the field ``MongoDBConnectionString``. Not setting it up or adding a wrong url will probably result in a crash. |
+| mongoDatabase           | easyauth      | Same default value as EasyAuth.                                                                                                                                                                                                                               |
+| mongoEasyAuthCollection | players       | Same default value as EasyAuth.                                                                                                                                                                                                                               |
+| mongoEdimCollection     | edim          | Default value is ``edim`` but could be anything else.                                                                                                                                                                                                         |
+| commandRoot             | edim          | Root command which could by anything else. With default values, it is reflected by the command ``/edim``                                                                                                                                                      |
+| commandRegister         | register      | Name of the subcommand to register players. With default values, it is reflected by the command ``/edim register <player>``                                                                                                                                   |
+| commandListPlayers      | listPlayers   | Name of the subcommand to get the list of connected players. With default value, it is reflected by the command ``/edim listPlayers``                                                                                                                         |
+| randomPasswordLength    | 4             | Length of the random password given to the player when registering through this mod's register command                                                                                                                                                        |
 
 ## Changelog 
 Version ``1.1.0`` :
