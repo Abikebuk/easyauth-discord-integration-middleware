@@ -39,10 +39,18 @@ public class Edim implements ModInitializer {
 	 */
 	private void registerCommand(){
 		CommandBuilder builder = new CommandBuilder();
-		builder.addCommand("edim register ?player", 4, Authentication::register);
-		builder.addCommand("edim unregister ?player", 4, Authentication::unregister);
-		builder.addCommand("edim getUuid ?player", 4, DBInterface::getPlayerUUID);
-		builder.addCommand("edim listPlayers", 4, MinecraftInterface::getConnectedPlayerName);
+		builder.addCommand( // edim register ?player
+				String.format("%s %s ?player", Globals.conf.commandRoot, Globals.conf.commandRegister),
+				4, Authentication::register);
+		builder.addCommand( // edim unregister ?player
+				String.format("%s %s ?player", Globals.conf.commandRoot, Globals.conf.commandUnregister),
+				4, Authentication::unregister);
+		builder.addCommand( // edim getUuid ?player
+				String.format("%s %s ?player", Globals.conf.commandRoot, Globals.conf.commandGetUUID),
+				4, DBInterface::getPlayerUUID);
+		builder.addCommand( // edim listPlayers ?player
+				String.format("%s %s", Globals.conf.commandRoot, Globals.conf.commandListPlayers),
+				4, MinecraftInterface::getConnectedPlayerName);
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				dispatcher.register(builder.generate()));
 	}
