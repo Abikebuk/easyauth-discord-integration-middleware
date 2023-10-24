@@ -5,7 +5,10 @@ This mods allows the use of Discord commands through the Discord Integration mod
 This mod requires some basic Discord bot and MongoDB knowledge.
 
 ## Features
-This mod 
+* Integration of EasyAuth registration / unregistration of User on the server
+* Few other utilities commands.
+* Complementary data added in the database on top of what EasyAuth adds.
+
 ## Dependencies 
 The only true dependency is [EasyAuth](https://www.curseforge.com/minecraft/mc-mods/easyauth) that must use MongoDB (see [here](https://github.com/NikitaCartes/EasyAuth/wiki/Config)).  As such it can be considered as a EasyAuth extension.
 
@@ -37,8 +40,10 @@ A configuration file ``config/edim.json`` will be automatically generated on ser
 | mongoEasyAuthCollection | players       | Same default value as EasyAuth.                                                                                                                                                                                                                               |
 | mongoEdimCollection     | edim          | Default value is ``edim`` but could be anything else.                                                                                                                                                                                                         |
 | commandRoot             | edim          | Root command which could by anything else. With default values, it is reflected by the command ``/edim``                                                                                                                                                      |
-| commandRegister         | register      | Name of the subcommand to register players. With default values, it is reflected by the command ``/edim register <player>``                                                                                                                                   |
+| commandRegister         | register      | Name of the subcommand to register a player. With default values, it is reflected by the command ``/edim register <player>``                                                                                                                                  |
+| commandUnregister       | unregister    | Name of the subcommand to unregister (delete) a player. With default values, it is reflected by the command ``/edim unregister <player>``                                                                                                                     |
 | commandListPlayers      | listPlayers   | Name of the subcommand to get the list of connected players. With default value, it is reflected by the command ``/edim listPlayers``                                                                                                                         |
+| commandGetUUID          | getUuid       | Name of the subcommand to get the uuid of a registered player. With default value, it is reflected by the command ``/edim getUuid <player>``                                                                                                                  |
 | randomPasswordLength    | 4             | Length of the random password given to the player when registering through this mod's register command                                                                                                                                                        |
 
 ## Changelog 
